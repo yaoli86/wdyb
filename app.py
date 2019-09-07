@@ -243,6 +243,10 @@ def upload_file():
     return response
 
 
+@app.route('/hello', methods=['GET'])
+def Hello():
+    return 'Hello ^^'
+
 class Error(Exception):
     '''
     To return an error to the client, simply 'raise' an instance of this class at
