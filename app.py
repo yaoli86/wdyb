@@ -243,9 +243,10 @@ def upload_file():
     return response
 
 
-@app.route('/hello', methods=['GET'])
-def Hello():
-    return 'Hello ^^'
+@app.route('/')
+def index():
+    json_data = {'Hello': 'World!'}
+    return jsonify(json_data)
 
 class Error(Exception):
     '''
