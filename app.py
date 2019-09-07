@@ -278,4 +278,5 @@ def not_found(_):
 
 
 if __name__ == '__main__':
+    print('Start ^^')
     app.run()
