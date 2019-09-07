@@ -93,7 +93,7 @@ def build_PhotoInfo(image_gray, image_rgb, annotated_rgb, crop_faces):
     # print 'picture_id: ', photoinfo['pic_id']
     # _id = collection.insert_one(photoinfo).inserted_id
     # mongo automatically insersts _id into photoinfo
-    return photoinfo
+    return faceinfo['prediction']
 
 
 def obtain_images(encoded_image_str):
