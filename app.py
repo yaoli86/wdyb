@@ -63,12 +63,14 @@ def build_PhotoInfo(image_gray, image_rgb, annotated_rgb, crop_faces):
         face_image_gray = image_gray[y_face: y_face + h_face,
                           x_face: x_face + w_face]
         angry, fear, happy, sad, surprise, neutral = predict_emotion(face_image_gray, index)
-        faceinfo['prediction'] = [{'emotion': 'angry', 'percent': float(angry)},
-                                  {'emotion': 'fear', 'percent': float(fear)},
-                                  {'emotion': 'happy', 'percent': float(happy)},
-                                  {'emotion': 'sad', 'percent': float(sad)},
-                                  {'emotion': 'surprise', 'percent': float(surprise)},
-                                  {'emotion': 'neutral', 'percent': float(neutral)}]
+        faceinfo['prediction'] = {'angry':float(angry),
+                                  'fear':float(fear),
+                                  'happy':float(happy),
+                                  'sad':float(sad),
+                                  'surprise':float(surprise),
+                                  'neutral':float(neutral)
+                                  }
+
 
         if crop_faces != None:
             face_image_rgb = image_rgb[y_face: y_face + h_face,
@@ -95,7 +97,15 @@ def build_PhotoInfo(image_gray, image_rgb, annotated_rgb, crop_faces):
     # mongo automatically insersts _id into photoinfo
     return faceinfo['prediction']
 
+def likeornot(emoji):
+    print(emoji['happy'])
+    Positive = float(emoji['happy']) + float(emoji['surprise'])
+    Negative = float(emoji['angry']) + float(emoji['fear']) + float(emoji['sad'])
 
+
+    if Positive > Negative :
+        return {"score":emoji,"emoji":"Positive"}
+    return {"score":emoji,"emoji":"Negative"}
 def obtain_images(encoded_image_str):
     if encoded_image_str == '':
         raise Error(5724, 'You must supply a non-empty input image')
@@ -228,17 +238,12 @@ def predict():
 
 @app.route('/emoji', methods=['POST'])
 def upload_file():
-    if 'image' not in request.files:
-        return "Please upload the file"
-    file = request.files['image']
-    if file.filename == '':
-        return "No selected image"
     image = request.files['image']
     image_str = base64.b64encode(image.read())
     encoded_image_str = base64.b64decode(image_str)
     image_rgb, image_gray, annotated_rgb, crop_faces = obtain_images(encoded_image_str)
     photoinfo = build_PhotoInfo(image_gray, image_rgb, annotated_rgb, crop_faces)
-    response = jsonify(photoinfo)
+    response = jsonify(likeornot(photoinfo))
     response.headers.add('Access-Control-Allow-Origin', '*')
     return response
 
