@@ -99,8 +99,8 @@ def build_PhotoInfo(image_gray, image_rgb, annotated_rgb, crop_faces):
 
 def likeornot(emoji):
     print(emoji['happy'])
-    Positive = float(emoji['happy']) + float(emoji['surprise'])
-    Negative = float(emoji['angry']) + float(emoji['fear']) + float(emoji['sad'])
+    Positive = float(emoji['happy']) + float(emoji['surprise'])/2
+    Negative = float(emoji['angry']) + float(emoji['fear']) + float(emoji['sad'])/3
 
 
     if Positive > Negative :
